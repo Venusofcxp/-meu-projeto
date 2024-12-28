@@ -19,23 +19,8 @@ def get_filme(vod_id):
         response.raise_for_status()
         data = response.json()  # Pega os dados como JSON
 
-        # Função para coletar todas as chaves do JSON
-        def get_all_keys(obj, parent_key=''):
-            keys = []
-            if isinstance(obj, dict):
-                for k, v in obj.items():
-                    full_key = f"{parent_key}.{k}" if parent_key else k
-                    keys.append(full_key)
-                    keys.extend(get_all_keys(v, full_key))
-            elif isinstance(obj, list):
-                for i, item in enumerate(obj):
-                    keys.extend(get_all_keys(item, f"{parent_key}[{i}]"))
-            return keys
-
-        # Obtem todas as chaves do JSON
-        all_keys = get_all_keys(data)
-
-        return jsonify({"all_keys": all_keys})
+        # Retorna o JSON completo
+        return jsonify(data)
     except requests.exceptions.RequestException as e:
         # Retorna erro com detalhes
         return jsonify({"error": str(e)}), 500
