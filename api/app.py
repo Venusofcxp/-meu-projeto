@@ -19,21 +19,8 @@ def get_filme(vod_id):
         response.raise_for_status()
         data = response.json()  # Pega os dados como JSON
 
-        # Filtra os dados desejados
-        info = data.get("info", {})
-        movie_data = data.get("movie_data", {})
-
-        filtered_data = {
-            "banner": info.get("backdrop_path", [None])[0],  # Pega o primeiro item do array
-            "genre": info.get("genre"),
-            "description": info.get("description"),
-            "releasedate": info.get("releasedate"),  # Usa o campo releasedate
-            "stream_id": movie_data.get("stream_id"),
-            "category_id": movie_data.get("category_id"),
-            "tmdb_id": info.get("tmdb_id"),
-        }
-
-        return jsonify(filtered_data)
+        # Retorna o JSON completo
+        return jsonify(data)
     except requests.exceptions.RequestException as e:
         # Retorna erro com detalhes
         return jsonify({"error": str(e)}), 500
