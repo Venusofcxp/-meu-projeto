@@ -19,7 +19,13 @@ def get_filme(vod_id):
         response.raise_for_status()
         data = response.json()  # Pega os dados como JSON
 
-        # Retorna o JSON completo
+        # Ajusta o valor de backdrop_path, se existir
+        if "info" in data and "backdrop_path" in data["info"]:
+            backdrop = data["info"]["backdrop_path"]
+            if isinstance(backdrop, list) and len(backdrop) > 0:
+                data["info"]["backdrop_path"] = backdrop[0]  # Pega o primeiro item da lista
+
+        # Retorna o JSON ajustado
         return jsonify(data)
     except requests.exceptions.RequestException as e:
         # Retorna erro com detalhes
