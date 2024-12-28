@@ -19,21 +19,23 @@ def get_filme(vod_id):
         response.raise_for_status()
         data = response.json()  # Pega os dados como JSON
 
-        # Filtra os dados desejados
-        info = data.get("info", {})
-        movie_data = data.get("movie_data", {})
+        # Função para coletar todas as chaves do JSON
+        def get_all_keys(obj, parent_key=''):
+            keys = []
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    full_key = f"{parent_key}.{k}" if parent_key else k
+                    keys.append(full_key)
+                    keys.extend(get_all_keys(v, full_key))
+            elif isinstance(obj, list):
+                for i, item in enumerate(obj):
+                    keys.extend(get_all_keys(item, f"{parent_key}[{i}]"))
+            return keys
 
-        filtered_data = {
-            "banner": info.get("backdrop_path", [None])[0],  # Pega o primeiro item do array
-            "genre": info.get("genre"),
-            "description": info.get("description"),
-            "releasedate": info.get("releasedate"),  # Usa o campo releasedate
-            "stream_id": movie_data.get("stream_id"),
-            "category_id": movie_data.get("category_id"),
-            "tmdb_id": info.get("tmdb_id"),
-        }
+        # Obtem todas as chaves do JSON
+        all_keys = get_all_keys(data)
 
-        return jsonify(filtered_data)
+        return jsonify({"all_keys": all_keys})
     except requests.exceptions.RequestException as e:
         # Retorna erro com detalhes
         return jsonify({"error": str(e)}), 500
