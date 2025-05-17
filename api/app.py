@@ -7,9 +7,9 @@ app = Flask(__name__)
 @app.route('/api/filme/<int:vod_id>', methods=['GET'])
 def get_filme(vod_id):
     # URL base com as credenciais
-    base_url = "https://cdnbrr.click/player_api.php"
-    username = "146301758"
-    password = "024295079"
+    base_url = "http://solutta.shop:80"
+    username = "881101381017"
+    password = "896811296068"
 
     # Monta a URL completa
     url = f"{base_url}?username={username}&password={password}&action=get_vod_info&vod_id={vod_id}"
